@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import apiClient from "../../lib/api";
 import Link from "next/link";
+import BudgetAppTitle from "../../components/title";
 
 export default function DeleteAccountbook() {
   const [deleteId, setDeleteId] = useState("");
@@ -25,6 +26,9 @@ export default function DeleteAccountbook() {
   };
 
   const handleDelete = async () => {
+    const isConfirmed = window.confirm("本当に削除してもよろしいですか？");
+    if (!isConfirmed) return;
+
     try {
       const response = await apiClient.delete(`/accountbooks/${deleteId}`);
       if (response.status === 204) {
@@ -42,29 +46,46 @@ export default function DeleteAccountbook() {
 
   return (
     <>
-      <h1>帳簿削除</h1>
-      <input
-        type="number"
-        value={deleteId}
-        onChange={(e) => setDeleteId(e.target.value)}
-        placeholder="IDを入力してください"
-      />
-      <button onClick={handleFind}>検索</button>
+      <BudgetAppTitle />
+      <h1 className="text-2xl font-bold text-center my-4">帳簿削除</h1>
+      <div className="max-w-md mx-auto bg-white p-6 rounded shadow-md">
+        <input
+          type="number"
+          value={deleteId}
+          onChange={(e) => setDeleteId(e.target.value)}
+          placeholder="IDを入力してください"
+          className="block w-full p-2 mb-4 border border-gray-300 rounded"
+        />
+        <button
+          onClick={handleFind}
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+        >
+          検索
+        </button>
+      </div>
 
       {accountbook && (
-        <div>
-          <h2>削除対象の帳簿</h2>
-          <p>ID: {accountbook.id}</p>
-          <p>年月日: {accountbook.date}</p>
-          <p>種別: {accountbook.type}</p>
-          <p>内訳: {accountbook.breakdown}</p>
-          <p>金額: ¥{accountbook.price.toLocaleString()}</p>
-          <button onClick={handleDelete}>削除</button>
+        <div className="max-w-md mx-auto bg-white p-6 mt-6 rounded shadow-md">
+          <h2 className="text-xl font-semibold mb-4">削除対象の帳簿</h2>
+          <p className="mb-2">ID: {accountbook.id}</p>
+          <p className="mb-2">年月日: {accountbook.date}</p>
+          <p className="mb-2">種別: {accountbook.type}</p>
+          <p className="mb-2">内訳: {accountbook.breakdown}</p>
+          <p className="mb-4">金額: ¥{accountbook.price.toLocaleString()}</p>
+          <button
+            onClick={handleDelete}
+            className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+          >
+            削除
+          </button>
         </div>
       )}
-      <div>
-        <Link href={"/"}>戻る</Link>
+      <div className="mt-6 text-center">
+        <Link href="/">
+          <span className="text-blue-500 hover:underline">戻る</span>
+        </Link>
       </div>
+      <br></br>
     </>
   );
 }

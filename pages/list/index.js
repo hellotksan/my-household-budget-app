@@ -2,6 +2,7 @@ import { useState } from "react";
 import apiClient from "../../lib/api";
 import Link from "next/link";
 import AccountbooksPieChart from "../../components/piechart/index";
+import BudgetAppTitle from "../../components/title";
 
 export default function Accountbooks() {
   let [yearMonth, setYearMonth] = useState("");
@@ -39,63 +40,82 @@ export default function Accountbooks() {
 
   return (
     <>
-      <h1>家計簿を表示</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+      <BudgetAppTitle />
+      <h1 className="text-2xl font-bold text-center my-4">家計簿を表示</h1>
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-md mx-auto bg-white p-6 rounded shadow-md"
+      >
+        <label className="block text-gray-700 mb-4">
           年月を指定:
           <input
             type="month"
             value={yearMonth}
             onChange={(e) => setYearMonth(e.target.value)}
             required
+            className="block w-full mt-2 p-2 border border-gray-300 rounded"
           />
         </label>
-        <button type="submit">表示</button>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+        >
+          表示
+        </button>
       </form>
 
-      <div>
-        <h2>家計簿の結果</h2>
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold text-center">家計簿の結果</h2>
         {accountbooks.length > 0 ? (
           <>
-            <table>
+            <table className="min-w-full bg-white border border-gray-200 mt-4">
               <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>年月日</th>
-                  <th>種別</th>
-                  <th>内訳</th>
-                  <th>金額</th>
+                <tr className="bg-gray-100">
+                  <th className="py-2 px-4 border-b">ID</th>
+                  <th className="py-2 px-4 border-b">年月日</th>
+                  <th className="py-2 px-4 border-b">種別</th>
+                  <th className="py-2 px-4 border-b">内訳</th>
+                  <th className="py-2 px-4 border-b">金額</th>
                 </tr>
               </thead>
               <tbody>
                 {accountbooks.map((book) => (
-                  <tr key={book.id}>
-                    <td>{book.id}</td>
-                    <td>{book.date}</td>
-                    <td>{book.type}</td>
-                    <td>{book.breakdown}</td>
-                    <td>¥{book.price.toLocaleString()}</td>
+                  <tr key={book.id} className="hover:bg-gray-50">
+                    <td className="py-2 px-4 border-b">{book.id}</td>
+                    <td className="py-2 px-4 border-b">{book.date}</td>
+                    <td className="py-2 px-4 border-b">{book.type}</td>
+                    <td className="py-2 px-4 border-b">{book.breakdown}</td>
+                    <td className="py-2 px-4 border-b">
+                      ¥{book.price.toLocaleString()}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            <div>
-              <h2>合計</h2>
-              <p>収入の合計: ¥{incomeTotal.toLocaleString()}</p>
+            <div className="mt-6 text-center">
+              <h2 className="text-lg font-semibold">合計</h2>
+              <p className="mt-2">
+                収入の合計: ¥{incomeTotal.toLocaleString()}
+              </p>
               <p>支出の合計: ¥{expenseTotal.toLocaleString()}</p>
-              <p>収支の合計: ¥{balance.toLocaleString()}</p>
+              <p className="font-bold">
+                収支の合計: ¥{balance.toLocaleString()}
+              </p>
             </div>
 
             <AccountbooksPieChart accountbooks={accountbooks} />
           </>
         ) : (
-          <p>該当する家計簿はありません</p>
+          <p className="text-center text-red-500">該当する家計簿はありません</p>
         )}
       </div>
-      <div>
-        <Link href={"/"}>戻る</Link>
+      <div className="mt-6 text-center">
+        <Link href={"/"}>
+          <span className="text-blue-500 hover:underline">戻る</span>
+        </Link>
       </div>
+      <br></br>
     </>
   );
 }
